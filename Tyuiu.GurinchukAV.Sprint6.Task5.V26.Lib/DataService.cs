@@ -5,34 +5,33 @@ namespace Tyuiu.GurinchukAV.Sprint6.Task5.V26.Lib
 {
     public class DataService : ISprint6Task5V26
     {
+        public int len = 0;
         public double[] LoadFromDataFile(string path)
         {
-            if (!File.Exists(path))
-            {
-                throw new FileNotFoundException("Файл не найден.", path);
-            }
-
-            var multiplesOfFive = new List<double>();
-
-            using (var reader = new StreamReader(path))
+            using (StreamReader reader = new StreamReader(path))
             {
                 string line;
                 while ((line = reader.ReadLine()) != null)
                 {
-                    if (double.TryParse(line, NumberStyles.Any, CultureInfo.InvariantCulture, out double number))
-                    {
-                        number = Math.Round(number, 3, MidpointRounding.AwayFromZero);
-                        if (Math.Abs(number % 5) < 1e-10)
-                        {
-                            multiplesOfFive.Add(number);
-                        }
-                    }
+                    len++;
                 }
             }
 
-            multiplesOfFive = [5.0, 35.0];
+            double[] numsArray = new double[len];
 
-            return multiplesOfFive.ToArray();
+            int index = 0;
+            using (StreamReader reader = new StreamReader(path))
+            {
+                string line;
+                while ((line = reader.ReadLine()) != null)
+                {
+                    numsArray[index] = Convert.ToDouble(line);
+                    index++;
+                }
+            }
+            numsArray = numsArray.Where(val => val % 5 == 0).ToArray();
+
+            return numsArray;
         }
     }
 }
